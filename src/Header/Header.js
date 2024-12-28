@@ -204,7 +204,7 @@ const Header = () => {
                 <Divider />
                 <List>
                   <ListItem sx={{ marginTop: -2 }}>
-                    <h4>{user.email}</h4>
+                    <h4>{user.email.split('@')[0]}</h4>
                   </ListItem>
                   <ListItem sx={{ marginTop: -2 }}>
                     <DashboardCustomizeRoundedIcon sx={{ marginRight: 2, color: "#1e9ac7"}} /><Link onClick={handleDrawerClose} className="menuItem" to="/Home">Dashboard</Link>

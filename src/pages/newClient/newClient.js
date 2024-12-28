@@ -16,6 +16,7 @@ function MyForm({ showHeader = true }) {
   const [cep, setCep] = useState('');
   const [street, setStreet] = useState('');
   const [number, setNumber] = useState('');
+  const [compNumber, setCompNumber] = useState('');
   const [neighborhood, setNeighborhood] = useState('');
   const [city, setCity] = useState('');
   const [uf, setUf] = useState('');
@@ -32,6 +33,7 @@ function MyForm({ showHeader = true }) {
       localStorage.setItem('cep', cep);
       localStorage.setItem('street', street);
       localStorage.setItem('number', number);
+      localStorage.setItem('compNumber', compNumber);
       localStorage.setItem('neighborhood', neighborhood);
       localStorage.setItem('city', city);
       localStorage.setItem('uf', uf);
@@ -151,6 +153,15 @@ function MyForm({ showHeader = true }) {
                 {...register("addressNumber" )}
                 value={number}
                 onChange={(e) => setNumber(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="compNumber">
+              <Form.Label>Complemento: </Form.Label>
+              <Form.Control
+                type="text"
+                {...register("compNumber" )}
+                value={compNumber}
+                onChange={(e) => setCompNumber(e.target.value)}
               />
             </Form.Group>
           </Form>

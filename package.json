@@ -1,11 +1,16 @@
 {
   "name": "vendorapp",
   "version": "0.1.0",
+  "homepage": "./",
   "private": true,
   "dependencies": {
     "@acctglobal/image-gallery": "^0.4.3",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
+    "@fortawesome/fontawesome-svg-core": "^6.7.2",
+    "@fortawesome/free-regular-svg-icons": "^6.7.2",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
     "@heroicons/react": "^2.0.17",
     "@mui/icons-material": "^5.11.11",
     "@mui/material": "^5.11.15",
@@ -54,6 +59,7 @@
     "svgo": "^3.0.2",
     "sweetpagination": "^1.0.15",
     "uuid": "^9.0.0",
+    "vendorapp": "file:",
     "web-vitals": "^2.1.4",
     "xlsx": "^0.18.5"
   },

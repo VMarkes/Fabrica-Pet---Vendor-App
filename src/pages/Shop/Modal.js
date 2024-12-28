@@ -2,6 +2,7 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import jsPDF from 'jspdf';
+import imagePath from '../../Logo-FP.png';
 import * as React from 'react';
 import { useState } from 'react';
 import './Modal.css';
@@ -20,7 +21,7 @@ const style = {
 };
 
 const contentStyle = {
-  height: '70%',
+  height: '55%',
   overflowY: "scroll",
   borderBottom: "5px solid #1e9ac7",
 }
@@ -76,10 +77,15 @@ export default function MyModal({ open, onClose, value }) {
     const cartHTML = cart.innerHTML;
     doc.html(cartHTML, {
       callback: function (doc) {
-          doc.addFont('helvetica', 'normal');
-          doc.save('carrinho.pdf');
+        const image = new Image();
+        image.src = imagePath;
+        
+          doc.addImage(image, 'PNG', 180, 5, 90, 45);
+          doc.setFont('helvetica', 'normal');
+          doc.save(`Pedido-${client}.pdf`);
       },
       x: 15,
+      y: 40,
       width: 1000,
       windowWidth: 1000,
       html2canvas: { scale: 0.4 },

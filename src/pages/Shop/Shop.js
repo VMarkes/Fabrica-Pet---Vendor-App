@@ -5,6 +5,8 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import React, { useEffect, useState } from "react";
 import InnerImageZoom from 'react-inner-image-zoom';
 import { Link } from 'react-router-dom';
@@ -234,7 +236,7 @@ function Shop() {
                 </div>
             </div>
       
-        <div className="shop-total">
+        {/* <div className="shop-total">
           <hr className="hr1" />
           <h1>Total</h1>
           <p>R$ {totalValor.toFixed(2)}</p>
@@ -249,7 +251,7 @@ function Shop() {
             ))}
           </p>
             <Link className="cartView" to='/Carrinho'><ShoppingCartIcon sx={{ marginRight: 2}} /> Ver Carrinho</Link>
-        </div>
+        </div> */}
 
       <Modal
         open={open}
@@ -260,7 +262,7 @@ function Shop() {
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h3" component="h2">
             <b>Total</b>
-            <button style={{ border: "none", fontSize: 32, backgroundColor: "white"  }} onClick={handleClose}>X</button>
+            <FontAwesomeIcon className="close-btn-modal-shop" icon={faCircleXmark} onClick={handleClose} size="xs" />
           </Typography>
           <div className="shop-total-mobile">
             <hr className="hr1" />

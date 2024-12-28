@@ -226,7 +226,7 @@ function CarrinhoSalvo() {
                                     <div className='closeBtn'>
                                         <button className="closeBtn-modal" onClick={handleClose}>Fechar</button>
                                     </div>
-                                    <div>
+                                    <div style={{ marginTop: "-80px"}}>
                                         <NewClient showHeader={false}/>
                                     </div>
                                     </Box>
