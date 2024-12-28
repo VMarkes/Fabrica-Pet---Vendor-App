@@ -16,12 +16,12 @@ Este é o repositório oficial do Fabricapet Vendor App, um aplicativo que permi
 ## Instalação
 ### 1. Clone este repositório:
 ```
-git clone https://github.com/VMarkes/Fabricapet-vendorapp.git
+git clone https://github.com/VMarkes/Fabrica-Pet---Vendor-App.git
 ```
 
 ### 2. Navegue até o diretório do projeto:
 ```
-cd Fabricapet-vendorapp
+cd Fabrica-Pet---Vendor-App
 ```
 
 ### 3. Instale as dependências:
