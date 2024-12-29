@@ -182,7 +182,7 @@ function Shop() {
   };
 
   return (
-    <div className="container">
+    <div className="container-shop">
       <Header />
       <div className="search">
                     <form className="form-search">

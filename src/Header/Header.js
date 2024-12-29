@@ -24,10 +24,11 @@ import Typography from '@mui/material/Typography';
 import { styled, useTheme } from '@mui/material/styles';
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
-import ButtonLogout from "../Components/Button";
-import useAuth from "../pages/hooks/useAuth";
+import { useContext } from 'react';
+import { AuthContext } from "../pages/contexts/auth"
 import CountCart from "./CountCart";
 import './header.css';
+import { Button } from 'react-bootstrap';
 
 const Header = () => {
   const [carrinho, setCarrinho] = useState([]);
@@ -107,8 +108,11 @@ const Header = () => {
       setAnchorElUser(null);
     };
 
-    const { signout } = useAuth();
-    const navigate = useNavigate();
+    const { logOut } = useContext(AuthContext);
+
+    async function handleLogout(){
+      await logOut();
+    }
 
   return (
     <nav className="navbar">
@@ -130,7 +134,7 @@ const Header = () => {
                   </Box>
                   <Box sx={{ flexGrow: 1, display: {md: 'flex', justifyContent: 'center', alignItems: 'center' } }}>
                     <Typography variant="h6" noWrap component="div" sx={{ marginLeft: 1 }}>
-                      Fábrica Pet
+                      <Link className='logo-name' to="/Home">Fábrica Pet</Link>
                     </Typography>
                   </Box>
                   <Box className="count" sx={{ marginRight: 3 }}>
@@ -160,13 +164,7 @@ const Header = () => {
                           <Link onClick={handleDrawerClose} className="menuItem" to="/Home">Perfil</Link>
                         </MenuItem>
                         <MenuItem onClick={handleCloseUserMenu}>
-                          <Link onClick={handleDrawerClose} className="menuItem" to="/Home">Dashboard</Link>
-                        </MenuItem>
-                        <MenuItem onClick={handleCloseUserMenu}>
                           <Link onClick={handleDrawerClose} className="menuItem" to="/Home">Configurações</Link>
-                        </MenuItem>
-                        <MenuItem onClick={handleCloseUserMenu}>
-                          <ButtonLogout className="btn-logout" Text="Sair" onClick={() => [signout(), navigate("/")]}>Sair</ButtonLogout>
                         </MenuItem>
                     </Menu>
                   </Box>
@@ -219,7 +217,7 @@ const Header = () => {
                     <PersonAddAlt1Icon sx={{ marginRight: 2, color: "#1e9ac7"}} /><Link onClick={handleDrawerClose} className="menuItem" to="/newClient">Cadastrar Cliente</Link>
                   </ListItem>
                   <ListItem>
-                    <ButtonLogout className="btn-logout" Text="Sair" onClick={() => [signout(), navigate("/")]}>Sair</ButtonLogout>
+                    <Button className='logOut-btn' onClick={handleLogout}>Sair</Button>
                   </ListItem>
                 </List>
               </Drawer>

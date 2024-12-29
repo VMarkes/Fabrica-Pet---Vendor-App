@@ -7,12 +7,16 @@ import 'react-tabs/style/react-tabs.css';
 import { toast } from 'react-toastify';
 import Header from "../../Header/Header";
 import "./newClient.css";
+import { db } from '../../services/firebaseConnection'
+import { addDoc, collection } from 'firebase/firestore'
 
-function MyForm({ showHeader = true }) {
+export default function NewClients({ showHeader = true }){
   const [razaoSocial, setRazaoSocial] = useState('');
   const [fantasia, setFantasia] = useState('');
   const [cnpj, setCnpj] = useState('');
   const [inscEstadual, setInscEstadual] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [cep, setCep] = useState('');
   const [street, setStreet] = useState('');
   const [number, setNumber] = useState('');
@@ -21,39 +25,50 @@ function MyForm({ showHeader = true }) {
   const [city, setCity] = useState('');
   const [uf, setUf] = useState('');
 
-  const handleSave = () => {
-    if (razaoSocial.trim() === '' || fantasia.trim() === '' || cnpj.trim() === '' || cep.trim() === '' || street.trim() === '' || number.trim() === '' || neighborhood.trim() === '' || city.trim() === '' || uf.trim() === '' || inscEstadual.trim() === '') {
-      toast.error("Preencha todos os campos!", {autoClose: 2000});
-    } else {
-      // Salve os valores no localStorage
-      localStorage.setItem('razaoSocial', razaoSocial);
-      localStorage.setItem('fantasia', fantasia);
-      localStorage.setItem('cnpj', cnpj);
-      localStorage.setItem('inscEstadual', inscEstadual);
-      localStorage.setItem('cep', cep);
-      localStorage.setItem('street', street);
-      localStorage.setItem('number', number);
-      localStorage.setItem('compNumber', compNumber);
-      localStorage.setItem('neighborhood', neighborhood);
-      localStorage.setItem('city', city);
-      localStorage.setItem('uf', uf);
-    }
-  };
+  async function handleRegister(e){
+    e.preventDefault();
 
-  const {register, setValue, setFocus} = useForm();
-  
-  const checkCEP = (e) => {
-    const cep = e.target.value.replace(/\D/g, '');
-    console.log(cep);
-    fetch(`https://viacep.com.br/ws/${cep}/json/`).then(res => res.json()).then(data => {
-      console.log(data);
-      // register({ name: 'address', value: data.logradouro });
-      setValue('address', data.logradouro);
-      setValue('neighborhood', data.bairro);
-      setValue('city', data.localidade);
-      setValue('uf', data.uf);
-      setFocus('addressNumber');
-    });
+    if (razaoSocial !== '' && fantasia !== '' && cnpj !== '' && cep !== '' && street !== '' && number !== '' && neighborhood !== '' && city !== '' && uf !== '' && inscEstadual !== '') {
+      await addDoc(collection(db, "clients"), {
+        razaoSocial: razaoSocial,
+        nomeFantasia: fantasia,
+        cnpj: cnpj,
+        inscEstadual: inscEstadual,
+        email: email,
+        telefone: phone,
+        cep: cep,
+        rua: street,
+        numero: number,
+        compNumero: compNumber,
+        bairro: neighborhood,
+        cidade: city,
+        estado: uf
+      })
+      .then(() => {
+        setRazaoSocial('')
+        setFantasia('')
+        setCnpj('')
+        setInscEstadual('')
+        setEmail('')
+        setPhone('')
+        setCep('')
+        setStreet('')
+        setNumber('')
+        setCompNumber('')
+        setNeighborhood('')
+        setCity('')
+        setUf('')
+        toast.success("Cliente Cadastrado com sucesso!")
+      })
+      .catch((error) => {
+        console.log(error)
+        toast.error("Erro ao cadastrar cliente.")
+      })
+      
+    }else{
+      toast.error("Preencha todos os campos!")
+    }
+
   }
 
   return (
@@ -67,6 +82,7 @@ function MyForm({ showHeader = true }) {
           <Tab>Endereço</Tab>
         </TabList>
 
+        <form onSubmit={handleRegister}>
         <TabPanel className="form-tab">
           <Form>
             <Form.Group controlId="razaoSocial">
@@ -105,20 +121,20 @@ function MyForm({ showHeader = true }) {
                 onChange={(e) => setInscEstadual(e.target.value)}
               />
             </Form.Group>
-            <Form.Group controlId="inscEstadual">
+            <Form.Group controlId="email">
               <Form.Label>E-mail: </Form.Label>
               <Form.Control
                 type="text"
-                value={inscEstadual}
-                onChange={(e) => setInscEstadual(e.target.value)}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </Form.Group>
-            <Form.Group controlId="inscEstadual">
+            <Form.Group controlId="phone">
               <Form.Label>Telefone: </Form.Label>
               <Form.Control
                 type="text"
-                value={inscEstadual}
-                onChange={(e) => setInscEstadual(e.target.value)}
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
               />
             </Form.Group>
           </Form>
@@ -133,16 +149,14 @@ function MyForm({ showHeader = true }) {
                 as={InputMask}
                 mask="99999-999"
                 value={cep}
-                onBlur={checkCEP}
                 onChange={(e) => setCep(e.target.value)}
               />           
             </Form.Group>
             <Form.Group controlId="street">
-              <Form.Label>Rua: </Form.Label>
+              <Form.Label>End.: </Form.Label>
               <Form.Control
                 type="text"
                 value={street}
-                {...register("address" )}
                 onChange={(e) => setStreet(e.target.value)}
               />           
             </Form.Group>
@@ -150,7 +164,6 @@ function MyForm({ showHeader = true }) {
               <Form.Label>Número: </Form.Label>
               <Form.Control
                 type="text"
-                {...register("addressNumber" )}
                 value={number}
                 onChange={(e) => setNumber(e.target.value)}
               />
@@ -159,7 +172,6 @@ function MyForm({ showHeader = true }) {
               <Form.Label>Complemento: </Form.Label>
               <Form.Control
                 type="text"
-                {...register("compNumber" )}
                 value={compNumber}
                 onChange={(e) => setCompNumber(e.target.value)}
               />
@@ -170,7 +182,6 @@ function MyForm({ showHeader = true }) {
               <Form.Label>Bairro: </Form.Label>
               <Form.Control
                 type="text"
-                {...register("neighborhood" )}
                 value={neighborhood}
                 onChange={(e) => setNeighborhood(e.target.value)}
               />
@@ -179,7 +190,6 @@ function MyForm({ showHeader = true }) {
               <Form.Label>Cidade: </Form.Label>
               <Form.Control
                 type="text"
-                {...register("city" )}
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
               />
@@ -188,18 +198,20 @@ function MyForm({ showHeader = true }) {
               <Form.Label>Estado: </Form.Label>
               <Form.Control
                 type="text"
-                {...register("uf" )}
                 value={uf}
                 onChange={(e) => setUf(e.target.value)}
               />
             </Form.Group>
           </Form>
         </TabPanel>
+        <button type='submit' className="btn-saveClient">Salvar</button>
+        </form>
       </Tabs>
-      <button className="btn-saveClient" onClick={handleSave}>Salvar</button>
+      
       </div>
     </div>
   );
+
 }
 
-export default MyForm;
+// export default MyForm;

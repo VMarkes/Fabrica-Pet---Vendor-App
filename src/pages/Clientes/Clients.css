@@ -5,3 +5,29 @@
 .client-content {
     margin-top: 100px;
 }
+
+.container {
+    width: 100%;
+    display: grid;
+    padding: 10px 50px 0px 50px;
+}
+
+.modal-button-client {
+    justify-self: start;
+}
+
+.client-list {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
+table {
+    width: 100%;
+}
+
+td {
+    text-align: center;
+    border-bottom: 1px solid grey;
+    padding: 5px;
+}

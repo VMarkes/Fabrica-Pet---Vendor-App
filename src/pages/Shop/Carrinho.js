@@ -11,9 +11,13 @@ import { v4 as uuidv4 } from 'uuid';
 import Header from '../../Header/Header';
 import NewClient from "../newClient/newClient";
 import './Carrinho.css';
+import { collection, getDocs  } from 'firebase/firestore'
+import { db } from '../../services/firebaseConnection'
+
+const listRef = collection(db, "clients")
 
 // Renderizar carrinho em uma página separada
-function CarrinhoSalvo() {
+export default function CarrinhoSalvo() {
 
     // Recuperar carrinho do localstorage
     const carrinhoSalvo = JSON.parse(localStorage.getItem('carrinho'));
@@ -26,6 +30,8 @@ function CarrinhoSalvo() {
     const [formaPagamentoSelecionada, setFormaPagamentoSelecionada] = useState('');
     const [clientValue, setClientValue] = useState('');
     const [coments, setComents] = useState('');
+
+    const [clients, setClients] = useState([]);
 
     // Função para remover um item do carrinho
     function removerDoCarrinho(index) {
@@ -167,11 +173,22 @@ function CarrinhoSalvo() {
         { label: "Cartão de crédito 3x", value: "Cartão de crédito 3x" }    
     ];
 
-    const clients = [
-        { label: "Teste1", value: "Teste1" },
-        { label: "Teste2", value: "Teste2" },
-        { label: "Teste3", value: "Teste3" }
-    ];
+    useEffect(() => {
+        const fetchClients = async () => {
+          try {
+            const querySnapshot = await getDocs(collection(db, "clients"));
+            const clientsList = querySnapshot.docs.map((doc) => ({
+              label: doc.data().nomeFantasia, // Nome do cliente para exibição
+              id: doc.id, // ID único para identificação
+            }));
+            setClients(clientsList);
+          } catch (error) {
+            console.error("Erro ao buscar clientes: ", error);
+          }
+        };
+    
+        fetchClients();
+      }, []);
 
     return (
         <div id="cart" className="cart">
@@ -210,12 +227,9 @@ function CarrinhoSalvo() {
                                     <Autocomplete disablePortal id="clientNome" options={clients} sx={{ display: "flex", marginTop: 3 }}
                                         renderInput={(params) => 
                                         <TextField {...params} label="Cliente" />
-                                        } value={clientValue} onChange={(event, newValue) => {
-                                            if (newValue === null) {
-                                                setClientValue(null);
-                                            } else {
-                                                setClientValue(newValue.value);
-                                            }
+                                        } value={clients.find((client) => client.label === clientValue) || null}
+                                        onChange={(event, newValue) => {
+                                          setClientValue(newValue ? newValue.label : "");
                                           }} />
                                 </span>
                             </td>
@@ -286,5 +300,3 @@ function CarrinhoSalvo() {
         </div>
     );
 }
-
-export default CarrinhoSalvo;

@@ -1,72 +1,121 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState, useEffect } from "react";
+import { auth, db } from "../../services/firebaseConnection";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import {  useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export const AuthContext = createContext({});
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState();
+function AuthProvider({ children }){
+  const [user, setUser] = useState(null)
+  const [loadingAuth, setLoadingAuth] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const userToken = localStorage.getItem("user_token");
-    const usersStorage = localStorage.getItem("users_bd");
+    async function loadUser(){
+      const storageUser = localStorage.getItem('@vendorAppPRO')
 
-    if (userToken && usersStorage) {
-      const hasUser = JSON.parse(usersStorage)?.filter(
-        (user) => user.email === JSON.parse(userToken).email
-      );
-
-      if (hasUser) setUser(hasUser[0]);
-    }
-  }, []);
-
-  const signin = (email, password) => {
-    const usersStorage = JSON.parse(localStorage.getItem("users_bd"));
-
-    const hasUser = usersStorage?.filter((user) => user.email === email);
-
-    if (hasUser?.length) {
-      if (hasUser[0].email === email && hasUser[0].password === password) {
-        const token = Math.random().toString(36).substring(2);
-        localStorage.setItem("user_token", JSON.stringify({ email, token }));
-        setUser({ email, password });
-        return;
-      } else {
-        return "E-mail ou senha incorretos";
+      if(storageUser){
+        setUser(JSON.parse(storageUser));
+        setLoading(false);
       }
-    } else {
-      return "Usuário não cadastrado";
-    }
-  };
 
-  const signup = (email, password) => {
-    const usersStorage = JSON.parse(localStorage.getItem("users_bd"));
-
-    const hasUser = usersStorage?.filter((user) => user.email === email);
-
-    if (hasUser?.length) {
-      return "Já tem uma conta com esse E-mail";
+      setLoading(false);
     }
 
-    let newUser;
+    loadUser();
+  }, [])
 
-    if (usersStorage) {
-      newUser = [...usersStorage, { email, password }];
-    } else {
-      newUser = [{ email, password }];
-    }
+  // Fazer login
+  async function signIn(email, password){
+    setLoadingAuth(true);
 
-    localStorage.setItem("users_bd", JSON.stringify(newUser));
+    await signInWithEmailAndPassword(auth, email, password)
+    .then( async (value) => {
+      let uid = value.user.uid;
 
-    return;
-  };
+      const docRef = doc(db, "users", uid);
+      const docSnap = await getDoc(docRef)
 
-  const signout = () => {
+      let data = {
+        uid: uid,
+        email: value.user.email,
+      }
+
+      setUser(data);
+      storageUser(data);
+      setLoadingAuth(false);
+      toast.success("Bem-vindo(a) de volta!")
+      navigate("/Home")
+    })
+    .catch((error) => {
+      console.log(error);
+      setLoadingAuth(false);
+      toast.error("E-mail ou senha incorreto!");
+    })
+
+  }
+
+  // Cadastrar novo usuário
+  async function signUp(email, password){
+    setLoadingAuth(true);
+
+    await createUserWithEmailAndPassword(auth, email, password)
+    .then( async (value) => {
+      let uid = value.user.uid
+
+      await setDoc(doc(db, "users", uid), {
+        email: email,
+      })
+
+      .then( () => {
+        let data = {
+          uid: uid,
+          email: value.user.email,
+        }
+
+        setUser(data);
+        storageUser(data);
+        setLoadingAuth(false);
+        toast.success("Bem-vindo(a)!")
+        navigate("/Home")
+      })
+      
+    })
+    .catch((error) => {
+      console.log(error);
+      setLoadingAuth(false);
+    })
+  }
+
+  function storageUser(data){
+    localStorage.setItem('@vendorAppPRO', JSON.stringify(data))
+  }
+
+  async function logOut(){
+    await signOut(auth);
+    localStorage.removeItem('@vendorAppPRO');
     setUser(null);
-    localStorage.removeItem("user_token");
-  };
+  }
 
-  return (
-    <AuthContext.Provider value={{ user, signed: !!user, signin, signup, signout }} >
+  return(
+    <AuthContext.Provider
+      value={{
+        signed: !!user,
+        user,
+        signIn,
+        signUp,
+        logOut,
+        loadingAuth,
+        loading
+      }}
+    >
       {children}
     </AuthContext.Provider>
-  );
-};
+  )
+}
+
+export default AuthProvider;

@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 export const Button = styled.button`
+  margin-bottom: 10px;
   padding: 16px 20px;
   outline: none;
   border: 1px solid white;
@@ -16,7 +17,7 @@ export const Button = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 1s;
+  transition: all 0.3s;
 
   &:hover {
     background-color: white;

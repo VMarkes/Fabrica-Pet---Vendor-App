@@ -1,75 +1,53 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Input from "../../Components/Input";
 import Button from "../../Components/Button";
 import * as C from "./styles";
-import { Link, useNavigate } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
+import { Link } from "react-router-dom";
+import { AuthContext } from "../contexts/auth";
 import img from '../../Logo-FP.png';
 import './style.css';
 
-const Signup = () => {
+export default function SignUp(){
   const [email, setEmail] = useState("");
-  const [emailConf, setEmailConf] = useState("");
-  const [senha, setSenha] = useState("");
-  const [error, setError] = useState("");
-  const navigate = useNavigate();
+  const [password, setPassword] = useState("");
 
-  const { signup } = useAuth();
+  const { signUp, loadingAuth } = useContext(AuthContext)
 
-  const handleSignup = () => {
-    if (!email | !emailConf | !senha) {
-      setError("Preencha todos os campos");
-      return;
-    } else if (email !== emailConf) {
-      setError("Os e-mails não são iguais");
-      return;
+  async function handleSignUp(e){
+    e.preventDefault();
+
+    if(email !== '' && password !== ''){
+      await signUp(email, password);
     }
-
-    const res = signup(email, senha);
-
-    if (res) {
-      setError(res);
-      return;
-    }
-
-    alert("Usuário cadatrado com sucesso!");
-    navigate("/");
-  };
+  }
 
   return (
     <C.Container>
       <img className="logo-img" src={img} />
       <C.Label>CADASTRE-SE</C.Label>
       <C.Content>
-        <Input
-          type="email"
-          placeholder="Digite seu E-mail"
-          value={email}
-          onChange={(e) => [setEmail(e.target.value), setError("")]}
-        />
-        <Input
-          type="email"
-          placeholder="Confirme seu E-mail"
-          value={emailConf}
-          onChange={(e) => [setEmailConf(e.target.value), setError("")]}
-        />
-        <Input
-          type="password"
-          placeholder="Digite sua Senha"
-          value={senha}
-          onChange={(e) => [setSenha(e.target.value), setError("")]}
-        />
-        <C.labelError>{error}</C.labelError>
-        <Button Text="Inscrever-se" onClick={handleSignup} />
-        <C.LabelSignin>
-          Já tem uma conta?
-          <C.Strong>
-            <Link to="/">&nbsp;Entre</Link>
-          </C.Strong>
-        </C.LabelSignin>
+        <form onSubmit={handleSignUp}>
+          <Input
+            type="email"
+            placeholder="Digite seu E-mail"
+            value={email}
+            onChange={(e) => [setEmail(e.target.value)]}
+          />
+          <Input
+            type="password"
+            placeholder="Digite sua Senha"
+            value={password}
+            onChange={(e) => [setPassword(e.target.value)]}
+          />
+          <Button Text={loadingAuth ? 'Carregando...' : 'Cadastrar'} Type="submit"/>
+          <C.LabelSignin>
+            Já tem uma conta?
+            <C.Strong>
+              <Link to="/">&nbsp;Entre</Link>
+            </C.Strong>
+          </C.LabelSignin>
+        </form>
       </C.Content>
     </C.Container>
   );
 };
-
-export default Signup;

@@ -1,14 +1,12 @@
-import Rotas from "./Rotas";
+import Routes from "./Routes/Rotas";
 import { ToastContainer } from "react-toastify";
-import { AuthProvider } from "./pages/contexts/auth";
+
 
 function App() {
   return (
     <div>
-      <AuthProvider>
-          <ToastContainer  />
-          <Rotas />
-      </AuthProvider>
+          <ToastContainer autoClose={2000} />
+          <Routes />
     </div>
   )
   
