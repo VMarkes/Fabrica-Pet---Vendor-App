@@ -22,12 +22,10 @@
     justify-content: space-around;
 }
 
-table {
-    width: 100%;
+.th {
+    background-color: #1e9ac7;
 }
 
-td {
-    text-align: center;
-    border-bottom: 1px solid grey;
-    padding: 5px;
+.form-client-edit form {
+    margin-top: 60px;
 }

@@ -1,3 +1,7 @@
+.tab-list {
+    margin-left: 150px;
+}
+
 .form-cadastroCliente {
     padding: 20px;
     margin-left: 20px;
@@ -55,12 +59,7 @@
     width: 100%;
 }
 
-.form ul li {
-    border-radius: 5px;
-    box-shadow: 5px 3px 12px #888888;
-    margin-right: 15px;
-    margin-bottom: 30px;
-}
+
 
 .form ul li::selection {
     background-color: #1e9ac7;
@@ -69,7 +68,6 @@
 .form ul li::after {
     width: 0;
 }
-
 
 .form-tab {
     width: 80%;
@@ -126,10 +124,16 @@
         margin-top:50px;
     }
 
+    .new-client form {
+        margin-left: 1.8rem;
+    }
+
+    .tab-list {
+        margin-left: 0px;
+    }
+
     .form {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
+        display: grid;
     }
 
     .form-tab {

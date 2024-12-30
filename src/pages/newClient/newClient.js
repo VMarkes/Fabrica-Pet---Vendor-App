@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
-import { useForm } from 'react-hook-form';
 import InputMask from 'react-input-mask';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
@@ -77,11 +76,10 @@ export default function NewClients({ showHeader = true }){
     <div className="new-client">
     <h1>Cadastrar Cliente</h1>
       <Tabs className="form">
-        <TabList>
+        <TabList className="tab-list">
           <Tab>Cliente</Tab>
           <Tab>Endereço</Tab>
         </TabList>
-
         <form onSubmit={handleRegister}>
         <TabPanel className="form-tab">
           <Form>

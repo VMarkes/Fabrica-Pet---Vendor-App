@@ -192,7 +192,7 @@ function Shop() {
                     <button className="btn-search" onClick={Clear}>Limpar</button>
                   </div>
             <div className="btnMobile">
-              <Button className="btn-total-mobile" onClick={handleOpen}>Total</Button>
+              <Button className="btn-total-mobile" onClick={handleOpen}><b>Total</b></Button>
             </div>
             <div className="shop-container">
               <h1>Produtos</h1>

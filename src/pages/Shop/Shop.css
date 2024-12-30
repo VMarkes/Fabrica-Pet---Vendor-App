@@ -193,6 +193,11 @@
   color: white;
 }
 
+.btn-total-mobile:hover {
+  color: #1e9ac7;
+  border: 1px solid #1e9ac7;
+}
+
 .shop-total {
   padding: 20px;
   height: auto;
@@ -266,7 +271,7 @@
     margin-left: -3.5rem;
   }
 
-  .btnMobile .btn-total-mobile {
+  .btn-total-mobile {
     background-color: #1e9ac7;
     width: 100px;
     height: 100px;
@@ -317,10 +322,6 @@
     height: 30px;
     margin-top: 15px;
     color: white;
-  }
-
-  .btn-total-mobile{
-    visibility: visible;
   }
 
   #modal-modal-title {
